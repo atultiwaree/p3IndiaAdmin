@@ -1,47 +1,52 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Products of distributers</title>
-        <script src="../script.js"></script>
-        <link rel="stylesheet" href="screens.css">
 
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products of distributers</title>
+    <script src="../script.js"></script>
+    <link rel="stylesheet" href="screens.css">
 
-        <div id="container">
+</head>
 
-            <div id="inputParent">
+<body>
 
-                <!-- input form -->
-                <div class="main">
-                    <img src="https://p3india.com/cdn/shop/files/P3_logo_header.png?v=1717138933&width=165s" title="p3india" class="logo" />
+    <div id="container">
+
+        <div id="inputParent">
+
+            <!-- input form -->
+            <div class="main">
+                <img src="https://p3india.com/cdn/shop/files/P3_logo_header.png?v=1717138933&width=165s" title="p3india"
+                    class="logo" />
+            </div>
+
+            <div id="container">
+
+                <div id="eachProductContainer">
+                    <div class="eachProducts">
+
+                        <input type="text" id="productId0" name=" code" placeholder="Product Code" required />
+
+                        <input class="box-size" type="product" id="productName0" name="distributer-id"
+                            placeholder=" Product Name" />
+
+                        <input class="box-size" type="product-price" id="productPrice0" placeholder=" Product Price" />
+
+                        <input class="box-size" type="number" id="quantity0" placeholder="Quantity" />
+
+                    </div>
                 </div>
 
-                <div id="container">
-
-                    <div id="eachProductContainer">
-                        <div class="eachProducts">
-
-                            <input type="text" id="productId0" name=" code" placeholder="Product Code" required />
-
-                            <input class="box-size" type="product" id="productName0" name="distributer-id" placeholder=" Product Name" />
-
-                            <input class="box-size" type="product-price" id="productPrice0" placeholder=" Product Price" />
-
-                        </div>
-                    </div>
-
-                    <div id="btnContainer">
-                        <button class="btn dynamicBtn" type="submit" onclick="generateInputElement()">Add</button>
-                        <button class="btn dynamicBtn" type="submit" onclick="saveDistributorData()">Save</button>
-                    </div>
-
-                    <!-- <button class="add-btn" onclick="generateInputElement()">Add more products</button> -->
-
+                <div id="btnContainer">
+                    <button class="btn dynamicBtn" type="submit" onclick="generateInputElement()">Add</button>
+                    <button class="btn dynamicBtn" type="submit" onclick="saveDistributorData()">Save</button>
                 </div>
 
-            </body>
-        </html>
+                <!-- <button class="add-btn" onclick="generateInputElement()">Add more products</button> -->
+            </div>
+
+</body>
+
+</html>

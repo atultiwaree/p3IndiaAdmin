@@ -1,31 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="screens.css">
-        <title>Document</title>
-        <meta name="theme-color" content="#012474">
-    </head>
-    <body>
-        <div class="main">
-            <img src="https://p3india.com/cdn/shop/files/P3_logo_header.png?v=1717138933&width=165s" title="p3india" class="logo" />
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="screens.css" />
+  <title>Add Shop</title>
+  <meta name="theme-color" content="#012474" />
+</head>
+<body>
+  <div class="main">
+    <img
+      src="https://p3india.com/cdn/shop/files/P3_logo_header.png?v=1717138933&width=165s"
+      title="p3india"
+      class="logo"
+    />
+  </div>
 
-        <div id="container">
-            <div id="box">
+  <div id="container">
+    <div id="box">
+      <input type="text" id="shopname" name="shop" placeholder="Shop Name" required />
+      <input class="box-size" type="text" id="shopId" name="shopId" placeholder="Shop ID" />
+      <input class="box-size" type="text" id="ownerName" name="ownerName" placeholder="Owner Name" />
+      <button class="btn" onclick="submitShop()">Submit</button>
+    </div>
+  </div>
 
-                <input type="text" id="shopname" name="shop" placeholder="Shop Name" required />
+  <script>
+    async function submitShop() {
+      const shopName = document.getElementById("shopname").value.trim();
+      const shopId = document.getElementById("shopId").value.trim();
+      const ownerName = document.getElementById("ownerName").value.trim();
 
-                <input class="box-size" type="text" id="shopId" name="shopId" placeholder="Shop ID" />
+      if (!shopName || !shopId) {
+        alert("Please fill Shop Name and Shop ID.");
+        return;
+      }
 
-                <input class="box-size" type="text" id="ownerName" name="ownerName" placeholder="Owner Name" />
-                <button class="btn" type="submit">Submit</button>
+      const body = {
+        shopName,
+        shopId,
+        ownerName,
+      };
 
-            </div>
+      try {
+        const res = await fetch("http://localhost:3000/api/shops/add-shop", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
 
-        </div>
+        const data = await res.json();
 
-    </body>
+        if (res.ok) {
+          alert("Shop added successfully!");
+          document.getElementById("shopname").value = "";
+          document.getElementById("shopId").value = "";
+          document.getElementById("ownerName").value = "";
+        } else {
+          alert(data.message || "Failed to add shop.");
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+  </script>
+</body>
 </html>

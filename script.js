@@ -36,13 +36,20 @@ function generateInputElement() {
   createProductPriceInput.id = `productPrice${numberOfElements}`;
   createProductPriceInput.placeholder = `Product Price ${numberOfElements}`;
 
+  const createProductQuantitiy = document.createElement('input')
+  createProductQuantitiy.id = `productQuantity${numberOfElements}`
+  createProductQuantitiy.placeholder = `Quantity ${numberOfElements}`
+
+
+
+
   //Andar dal do
 
   // inputContainer.appendChild(createProductCodeInput);
   // inputContainer.appendChild(createProductNameInput);
   // inputContainer.appendChild(createProductPriceInput);
 
-  inputContainer.append(createProductCodeInput, createProductNameInput, createProductPriceInput);
+  inputContainer.append(createProductCodeInput, createProductNameInput, createProductPriceInput, createProductQuantitiy);
 
   numberOfElements++;
 
@@ -66,15 +73,17 @@ function saveDistributorData() {
     const nameInput = document.getElementById(`productName${index}`);
     const idInput = document.getElementById(`productId${index}`);
     const priceInput = document.getElementById(`productPrice${index}`);
+    const quantityInput = document.getElementById(`quantity${index}`)
 
-    // Skip this index if the inputs don't exist (extra index from counter)
-    if (!nameInput || !idInput || !priceInput) continue;
+    // Skip this index if the inputs don't exist
+    if (!nameInput || !idInput || !priceInput || !quantityInput) continue;
 
     let name = nameInput.value.trim();
     let id = idInput.value.trim();
     let price = priceInput.value.trim();
+    let quantity = quantityInput.value.trim()
 
-    if (!name || !id || !price) {
+    if (!name || !id || !price || !quantity) {
       alert(`Please fill all fields for Product ${index + 1}`);
       isValid = false;
       break;
@@ -83,32 +92,94 @@ function saveDistributorData() {
     newProducts.push({
       code: id,
       name,
-      price,
+      price: parseFloat(price),
+      quantity
     });
   }
 
   if (!isValid) return;
 
-  // Save valid products
-  products = [...products, ...newProducts];
-  console.log(products);
+  const distributorData = {
+    name: distributorName,
+    distributorId: distributorId,
+    products: newProducts,
+  };
 
-  // Clear dynamically added inputs (index > 0)
-  const eachProductContainer = document.getElementById("eachProductContainer");
-  const children = Array.from(eachProductContainer.children);
+  // Send POST request to backend
+  fetch('http://localhost:3000/api/distributors/add-distributor', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(distributorData),
+  })
+    .then(res => res.json())
+    .then(response => {
+      if (response.message === 'Distributor added successfully') {
+        alert('Distributor saved to database successfully!');
+        console.log('Saved data:', response.data);
 
-  children.forEach((child, index) => {
-    if (index > 0) {
-      eachProductContainer.removeChild(child);
+        // Clear dynamic inputs
+        const eachProductContainer = document.getElementById("eachProductContainer");
+        const children = Array.from(eachProductContainer.children);
+        children.forEach((child, index) => {
+          if (index > 0) {
+            eachProductContainer.removeChild(child);
+          }
+        });
+
+        numberOfElements = 0;
+        document.getElementById("productId0").value = "";
+        document.getElementById("productName0").value = "";
+        document.getElementById("productPrice0").value = "";
+        document.getElementById('quantity0').value = ""
+      } else {
+        alert('Error: ' + response.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error saving distributor:', error);
+      alert('Failed to save distributor. Check console for details.');
+    });
+}
+
+
+async function addUser() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const role = "retailer";
+  const passphrase = document.getElementById("passphrase").value.trim();
+
+  // Basic validation
+  if (!email || !password || !role || !passphrase) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  const body = { email, password, role, passphrase };
+
+  try {
+    const res = await fetch('http://localhost:3000/api/auth/add-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("User added successfully!");
+
+      // Clear input fields
+      document.getElementById("email").value = '';
+      document.getElementById("password").value = '';
+      // document.getElementById("role").value = '';
+      document.getElementById("passphrase").value = '';
+      
+    } else {
+      alert(data.message || "Something went wrong.");
     }
-  });
-
-  numberOfElements = 0;
-
-  // Clear the initial input fields (index 0)
-  document.getElementById("productId0").value = "";
-  document.getElementById("productName0").value = "";
-  document.getElementById("productPrice0").value = "";
-
-  alert("Products saved successfully!");
+  } catch (err) {
+    alert("Error while saving user: " + err.message);
+  }
 }
