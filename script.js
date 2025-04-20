@@ -106,7 +106,7 @@ function saveDistributorData() {
   };
 
   // Send POST request to backend
-  fetch('http://localhost:3000/api/distributors/add-distributor', {
+  fetch('https://p3indiabackend.onrender.com/api/distributors/add-distributor', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ async function addUser() {
   const body = { email, password, role, passphrase };
 
   try {
-    const res = await fetch('http://localhost:3000/api/auth/add-user', {
+    const res = await fetch('https://p3indiabackend.onrender.com/api/auth/add-user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
